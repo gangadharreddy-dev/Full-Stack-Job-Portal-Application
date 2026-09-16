@@ -195,11 +195,29 @@ export const api = {
   },
 
   applications: {
-    async apply(payload: { job_id: number; cover_letter: string }) {
-      return request<{ id: number }>("/api/applications", {
+    async apply(payload: { job_id: number; cover_letter: string; resume?: File | null }) {
+      const token = getToken();
+      const form = new FormData();
+      form.append("job_id", String(payload.job_id));
+      form.append("cover_letter", payload.cover_letter);
+      if (payload.resume) {
+        form.append("resume", payload.resume);
+      }
+
+      const res = await fetch(`${API_BASE}/api/applications`, {
         method: "POST",
-        body: JSON.stringify(payload),
+        headers: token ? { Authorization: `Bearer ${token}` } : {},
+        body: form,
       });
+
+      if (!res.ok) {
+        let payload2: ApiError | undefined;
+        try { payload2 = (await res.json()) as ApiError; } catch { /* ignore */ }
+        const detail = payload2?.detail ?? payload2?.message ?? `Apply failed (${res.status})`;
+        throw new Error(detail);
+      }
+
+      return (await res.json()) as { id: number; resume_uploaded: boolean };
     },
 
     async mine() {
