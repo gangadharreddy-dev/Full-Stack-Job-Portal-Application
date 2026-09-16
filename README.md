@@ -1,4 +1,5 @@
-<img width="1470" height="835" alt="Screenshot 2026-06-24 at 2 57 03 PM" src="https://github.com/user-attachments/assets/fdd48d3b-c897-4014-9a27-89914047bdf7" />
+<img width="2939" height="1667" alt="image" src="https://github.com/user-attachments/assets/cb3b664f-8786-4748-878c-af9776f5125a" />
+
 # Full Stack Job Portal Application
 
 A modern Full Stack Job Portal built with FastAPI, React, TypeScript, SQLite, and JWT Authentication.
