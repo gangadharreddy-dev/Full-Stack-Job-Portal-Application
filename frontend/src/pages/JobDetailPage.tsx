@@ -62,30 +62,47 @@ export default function JobDetailPage({
         ← Back
       </button>
 
-      {loading && <div>Loading...</div>}
+      {loading && <div className="muted">Loading opportunity details...</div>}
       {error && <div className="error">{error}</div>}
 
       {job && (
-        <>
-          <h2>{job.title}</h2>
-          <div className="sub">
-            {job.company} • {job.location} • {job.job_type}
+        <div className="detail-card">
+          <div>
+            <h2>{job.title}</h2>
+            <div className="sub" style={{ marginTop: "6px" }}>
+              <strong>{job.company}</strong> • {job.location} • <span className="card-type">{job.job_type}</span>
+            </div>
+            {job.deadline && (
+              <div style={{ marginTop: "12px" }}>
+                <span className="card-deadline">
+                  ⏳ Application Deadline: {new Date(job.deadline).toLocaleDateString(undefined, { month: "short", day: "numeric", year: "numeric" })} ({Math.max(1, Math.ceil((new Date(job.deadline).getTime() - Date.now()) / (1000 * 60 * 60 * 24)))} days remaining)
+                </span>
+              </div>
+            )}
           </div>
-          <p className="desc">{job.description}</p>
 
-          <form onSubmit={handleApply} className="form">
+          <div style={{ borderTop: "1px solid #f4f2eb", paddingTop: "16px" }}>
+            <h3 style={{ margin: "0 0 8px", fontSize: "16px", fontWeight: 700 }}>About this Opportunity</h3>
+            <p className="desc">{job.description}</p>
+          </div>
+
+          <form onSubmit={handleApply} className="form" style={{ borderTop: "1px solid #f4f2eb", paddingTop: "20px" }}>
+            <h3 style={{ margin: "0 0 4px", fontSize: "16px", fontWeight: 700 }}>Apply for this Role</h3>
             <label>
-              Cover letter
+              Why are you a good fit for this role? (Cover Note)
               <textarea
                 value={coverLetter}
                 onChange={(e) => setCoverLetter(e.target.value)}
+                placeholder="Mention your college, skills, projects, and availability..."
                 required
-                rows={6}
+                rows={5}
               />
             </label>
-            <button disabled={applying}>{applying ? "Applying..." : "Apply"}</button>
+            <button disabled={applying} style={{ alignSelf: "flex-start", minWidth: "160px" }}>
+              {applying ? "Submitting Application..." : "Submit Application"}
+            </button>
           </form>
-        </>
+        </div>
       )}
     </div>
   );

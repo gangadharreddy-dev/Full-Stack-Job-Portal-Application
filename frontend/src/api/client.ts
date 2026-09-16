@@ -117,10 +117,11 @@ export const api = {
   },
 
   jobs: {
-    async list(params?: { q?: string; location?: string }) {
+    async list(params?: { q?: string; location?: string; job_type?: string }) {
       const url = new URL(`${API_BASE}/api/jobs`);
       if (params?.q) url.searchParams.set("q", params.q);
       if (params?.location) url.searchParams.set("location", params.location);
+      if (params?.job_type) url.searchParams.set("job_type", params.job_type);
 
       const token = getToken();
       const res = await fetch(url.toString(), {
@@ -145,6 +146,7 @@ export const api = {
         location: string;
         description: string;
         job_type: string;
+        deadline?: string | null;
         created_at: string;
       }>;
     },
@@ -157,6 +159,7 @@ export const api = {
         location: string;
         description: string;
         job_type: string;
+        deadline?: string | null;
         created_at: string;
       }>(`/api/jobs/${job_id}`);
     },

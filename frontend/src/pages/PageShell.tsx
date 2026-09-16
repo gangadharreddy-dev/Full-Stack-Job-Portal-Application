@@ -10,7 +10,7 @@ export default function PageShell({
   return (
     <div>
       <header className="header">
-        <div className="brand">JobPortal</div>
+        <a href="#/jobs" className="brand">Jobetix</a>
         {right ? <div className="header-right">{right}</div> : null}
       </header>
       <main className="container">{children}</main>

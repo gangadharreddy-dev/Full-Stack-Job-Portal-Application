@@ -24,19 +24,24 @@ export default function LoginPage({ onAuthed }: { onAuthed: () => void }) {
 
   return (
     <div className="page">
-      <h2>Login</h2>
-      <form onSubmit={handleSubmit} className="form">
-        <label>
-          Email
-          <input value={email} onChange={(e) => setEmail(e.target.value)} required type="email" />
-        </label>
-        <label>
-          Password
-          <input value={password} onChange={(e) => setPassword(e.target.value)} required type="password" />
-        </label>
-        <button disabled={loading}>{loading ? "Logging in..." : "Login"}</button>
-        {error && <div className="error">{error}</div>}
-      </form>
+      <div className="form-card">
+        <h2 style={{ marginBottom: "20px", textAlign: "center" }}>Welcome to Jobetix</h2>
+        <form onSubmit={handleSubmit} className="form">
+          <label>
+            Email
+            <input value={email} onChange={(e) => setEmail(e.target.value)} required type="email" placeholder="student@college.edu" />
+          </label>
+          <label>
+            Password
+            <input value={password} onChange={(e) => setPassword(e.target.value)} required type="password" placeholder="••••••••" />
+          </label>
+          <button disabled={loading} style={{ marginTop: "8px" }}>{loading ? "Logging in..." : "Login to Account"}</button>
+          {error && <div className="error">{error}</div>}
+          <div className="muted" style={{ textAlign: "center", marginTop: "12px" }}>
+            Don't have an account? <a href="#/register" style={{ color: "var(--royal-blue)", fontWeight: 700 }}>Register as Student / Candidate</a>
+          </div>
+        </form>
+      </div>
     </div>
   );
 }

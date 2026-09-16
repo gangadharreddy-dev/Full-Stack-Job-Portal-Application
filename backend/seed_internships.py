@@ -158,17 +158,78 @@ INTERNSHIPS = [
         "job_type": "Full-time",
         "description": "Data analyst role focused on analyzing business data and supporting decision-making.",
     },
+    {
+        "company": "Infosys",
+        "title": "Graduate Trainee Engineer (2024/2025 Freshers)",
+        "location": "Hyderabad",
+        "job_type": "Full-time",
+        "description": "Fresher role for recent graduates. Training provided in full stack development, cloud, and modern programming languages.",
+    },
+    {
+        "company": "Cognizant",
+        "title": "Junior Software Engineer (Fresher)",
+        "location": "Chennai",
+        "job_type": "Full-time",
+        "description": "Entry-level software engineering role for fresh graduates. Work with enterprise clients on web applications and APIs.",
+    },
+    {
+        "company": "Google for Startups Accelerator",
+        "title": "Machine Learning Intern",
+        "location": "Remote",
+        "job_type": "Internship",
+        "description": "Student internship opportunity working with NLP, computer vision, and predictive machine learning models.",
+    },
+    {
+        "company": "Amazon Web Services",
+        "title": "Cloud & DevOps Intern",
+        "location": "Bangalore",
+        "job_type": "Internship",
+        "description": "Summer internship for computer science students interested in AWS infrastructure, Docker, CI/CD pipelines, and cloud automation.",
+    },
+    {
+        "company": "Razorpay",
+        "title": "Backend Engineering Intern",
+        "location": "Bangalore",
+        "job_type": "Internship",
+        "description": "Exciting internship for students in fintech. Build scalable payment microservices in Go, Python, and Node.js.",
+    },
+    {
+        "company": "TCS",
+        "title": "Associate System Engineer (0-1 Yrs / Fresher)",
+        "location": "Chennai",
+        "job_type": "Full-time",
+        "description": "Entry-level position for engineering freshers. Hands-on coding and maintenance of high-throughput software systems.",
+    },
+    {
+        "company": "Cred",
+        "title": "UI/UX Product Design Intern",
+        "location": "Bangalore",
+        "job_type": "Internship",
+        "description": "Design internship for creative students. Prototype intuitive fintech consumer experiences using Figma and user research.",
+    },
 ]
 
+
+from datetime import datetime, timedelta
 
 def seed_jobs() -> None:
     init_db()
     db = SessionLocal()
     try:
-        added = 0
-        skipped = 0
+        now = datetime.utcnow()
+        # Purge any expired jobs
+        expired_count = db.query(Job).filter(Job.deadline != None, Job.deadline < now).delete(synchronize_session=False)
+        if expired_count:
+            print(f"Purged {expired_count} expired opportunities from database.")
 
-        for item in INTERNSHIPS:
+        added = 0
+        updated = 0
+
+        for i, item in enumerate(INTERNSHIPS):
+            # Calculate deadline staggered between 14 to 45 days from current date
+            days_valid = 14 + (i % 30)
+            item_deadline = now + timedelta(days=days_valid)
+
             exists = (
                 db.query(Job)
                 .filter(
@@ -179,14 +240,18 @@ def seed_jobs() -> None:
                 .first()
             )
             if exists:
-                skipped += 1
+                # Update deadline so freshers always see active deadlines
+                if not exists.deadline or exists.deadline < now:
+                    exists.deadline = item_deadline
+                    updated += 1
                 continue
 
-            db.add(Job(**item))
+            job_data = {**item, "deadline": item_deadline}
+            db.add(Job(**job_data))
             added += 1
 
         db.commit()
-        print(f"Added {added} jobs. Skipped {skipped} existing jobs.")
+        print(f"Added {added} jobs. Updated {updated} existing jobs with active deadlines.")
     finally:
         db.close()
 

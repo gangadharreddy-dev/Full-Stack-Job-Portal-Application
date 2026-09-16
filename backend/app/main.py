@@ -8,7 +8,7 @@ from app.routers.applications import router as applications_router
 from app.core.config import settings
 from app.db.init_db import init_db
 
-app = FastAPI(title="Job Portal API")
+app = FastAPI(title="Jobetix API")
 
 allowed_origins = [
     origin.strip()
