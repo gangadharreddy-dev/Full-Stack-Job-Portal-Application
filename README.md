@@ -148,23 +148,17 @@ python seed_internships.py
 
 ## Screenshots
 
-Add screenshots here after deployment.
+### Home Page & Job Listings
 
-### Home Page
+<img width="1470" height="835" alt="Home Page" src="https://github.com/user-attachments/assets/3e6aa737-6559-457f-8729-3d72f22f35ec" />
 
-<img width="1470" height="835" alt="Screenshot 2026-06-24 at 2 54 58 PM" src="https://github.com/user-attachments/assets/3e6aa737-6559-457f-8729-3d72f22f35ec" />
+### Job Search & Filtering
 
+<img width="1470" height="831" alt="Job Search" src="https://github.com/user-attachments/assets/34437152-58b8-4a46-9db9-92bf0a43d4d4" />
 
-### Job Listings
+### My Applications
 
-<img width="1470" height="831" alt="Screenshot 2026-06-24 at 2 55 47 PM" src="https://github.com/user-attachments/assets/34437152-58b8-4a46-9db9-92bf0a43d4d4" />
-
-
-### Apply Job
-
-<img width="1470" height="835" alt="Screenshot 2026-06-24 at 2 57 58 PM" src="https://github.com/user-attachments/assets/db23c0e7-85f4-4c74-82d6-8377e7f8154d" />
-
-
+<img width="1470" height="835" alt="My Applications" src="https://github.com/user-attachments/assets/db23c0e7-85f4-4c74-82d6-8377e7f8154d" />
 
 ## Future Enhancements
 
