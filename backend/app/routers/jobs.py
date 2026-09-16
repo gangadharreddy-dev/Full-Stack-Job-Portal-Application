@@ -82,12 +82,31 @@ def list_jobs(
                 "description": j.description,
                 "job_type": j.job_type,
                 "deadline": j.deadline.isoformat() if j.deadline else None,
+                "apply_url": j.apply_url,
                 "created_at": j.created_at,
             }
             for j in jobs
         ]
     finally:
         db.close()
+
+
+@router.post("/sync-live")
+def trigger_live_sync(db: Session = Depends(lambda: SessionLocal())) -> dict:
+    """Scrape and stream live jobs from LinkedIn & Indeed into the database."""
+    from app.services.live_sync import sync_live_jobs
+    init_db()
+    result = sync_live_jobs(db, limit_per_query=8)
+    return result
+
+
+@router.post("/clear-all")
+def trigger_clear_jobs(db: Session = Depends(lambda: SessionLocal())) -> dict:
+    """Clear all jobs from the database."""
+    from app.services.live_sync import clear_all_jobs
+    init_db()
+    result = clear_all_jobs(db)
+    return result
 
 
 @router.get("/{job_id}")
@@ -108,6 +127,7 @@ def job_detail(job_id: int, db: Session = Depends(lambda: SessionLocal())) -> di
         "description": job.description,
         "job_type": job.job_type,
         "deadline": job.deadline.isoformat() if job.deadline else None,
+        "apply_url": job.apply_url,
         "created_at": job.created_at,
     }
 

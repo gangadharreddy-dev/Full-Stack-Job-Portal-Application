@@ -147,6 +147,7 @@ export const api = {
         description: string;
         job_type: string;
         deadline?: string | null;
+        apply_url?: string | null;
         created_at: string;
       }>;
     },
@@ -160,8 +161,23 @@ export const api = {
         description: string;
         job_type: string;
         deadline?: string | null;
+        apply_url?: string | null;
         created_at: string;
       }>(`/api/jobs/${job_id}`);
+    },
+
+    async syncLive() {
+      return request<{ status: string; added_jobs: number; skipped_duplicates: number }>(
+        "/api/jobs/sync-live",
+        { method: "POST" }
+      );
+    },
+
+    async clearAll() {
+      return request<{ deleted_jobs: number; deleted_applications: number }>(
+        "/api/jobs/clear-all",
+        { method: "POST" }
+      );
     },
 
     async create(payload: {

@@ -32,5 +32,23 @@ app.include_router(applications_router, prefix="/api/applications", tags=["appli
 
 @app.on_event("startup")
 def on_startup():
-    """Initialize database tables on application startup"""
+    """Initialize DB and start the daily automated job scraping scheduler."""
     init_db()
+
+    # Start background scheduler for daily live job streaming
+    try:
+        from app.services.scheduler import start_scheduler
+        start_scheduler()
+    except Exception as e:
+        import logging
+        logging.getLogger(__name__).error(f"Scheduler failed to start: {e}")
+
+
+@app.on_event("shutdown")
+def on_shutdown():
+    """Gracefully stop the background scheduler on server shutdown."""
+    try:
+        from app.services.scheduler import stop_scheduler
+        stop_scheduler()
+    except Exception:
+        pass

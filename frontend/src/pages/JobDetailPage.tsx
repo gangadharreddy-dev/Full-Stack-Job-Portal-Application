@@ -79,7 +79,32 @@ export default function JobDetailPage({
                 </span>
               </div>
             )}
-          </div>
+          {job.apply_url && (
+            <div style={{ background: "var(--blue-tint)", border: "1px solid var(--blue-tint-border)", borderRadius: "12px", padding: "16px", display: "flex", alignItems: "center", justifyContent: "space-between", flexWrap: "wrap", gap: "12px" }}>
+              <div>
+                <strong style={{ color: "var(--royal-blue)", display: "block", fontSize: "15px" }}>🌐 Live External Opening (LinkedIn / Indeed)</strong>
+                <span style={{ fontSize: "14px", color: "var(--text-secondary)" }}>Direct official listing from the web. You can apply directly on the company site.</span>
+              </div>
+              <a
+                href={job.apply_url}
+                target="_blank"
+                rel="noopener noreferrer"
+                style={{
+                  background: "var(--royal-blue)",
+                  color: "#ffffff",
+                  fontWeight: 700,
+                  padding: "10px 18px",
+                  borderRadius: "10px",
+                  display: "inline-flex",
+                  alignItems: "center",
+                  gap: "6px",
+                  boxShadow: "0 2px 8px rgba(30,64,175,0.25)"
+                }}
+              >
+                Apply on Official Site ↗
+              </a>
+            </div>
+          )}
 
           <div style={{ borderTop: "1px solid #f4f2eb", paddingTop: "16px" }}>
             <h3 style={{ margin: "0 0 8px", fontSize: "16px", fontWeight: 700 }}>About this Opportunity</h3>

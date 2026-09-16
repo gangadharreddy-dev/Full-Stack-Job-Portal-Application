@@ -14,6 +14,22 @@ export default function JobsPage({
   const [jobs, setJobs] = useState<Job[]>([]);
   const [error, setError] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
+  const [syncing, setSyncing] = useState(false);
+  const [syncMessage, setSyncMessage] = useState<string | null>(null);
+
+  async function handleSyncLive() {
+    setSyncing(true);
+    setSyncMessage(null);
+    try {
+      const res = await api.jobs.syncLive();
+      setSyncMessage(`🎉 Live Sync Complete! Added ${res.added_jobs} fresh listings from LinkedIn & Indeed.`);
+      await fetchJobs(category, q, location);
+    } catch (err) {
+      setSyncMessage(err instanceof Error ? err.message : "Live sync failed");
+    } finally {
+      setSyncing(false);
+    }
+  }
 
   async function fetchJobs(cat = category, searchQ = q, searchLoc = location) {
     setLoading(true);
@@ -163,6 +179,34 @@ export default function JobsPage({
       </div>
 
       {error && <div className="error">{error}</div>}
+      {syncMessage && <div className="success">{syncMessage}</div>}
+
+      <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", flexWrap: "wrap", gap: "12px", margin: "4px 0" }}>
+        <div style={{ fontSize: "14px", color: "var(--text-secondary)", fontWeight: 600 }}>
+          Showing <strong>{jobs.length}</strong> active {category === "internship" ? "internships" : "opportunities"}
+        </div>
+        <button
+          type="button"
+          disabled={syncing}
+          onClick={handleSyncLive}
+          style={{
+            background: "#ffffff",
+            border: "1px solid var(--royal-blue)",
+            color: "var(--royal-blue)",
+            fontSize: "13px",
+            padding: "8px 16px",
+            borderRadius: "10px",
+            display: "inline-flex",
+            alignItems: "center",
+            gap: "8px",
+            fontWeight: 700,
+            cursor: "pointer",
+            boxShadow: "var(--shadow-sm)"
+          }}
+        >
+          {syncing ? "⏳ Scraping LinkedIn & Indeed..." : "⚡ Sync Real-Time Web Jobs"}
+        </button>
+      </div>
 
       <div className="cards">
         {jobs.map((j) => (
@@ -181,6 +225,11 @@ export default function JobsPage({
             <div className="card-footer">
               <div style={{ display: "flex", gap: "6px", alignItems: "center", flexWrap: "wrap" }}>
                 <span className="card-type">{j.job_type}</span>
+                {j.apply_url && (
+                  <span style={{ fontSize: "11px", fontWeight: 700, background: "#f0fdf4", color: "#16a34a", border: "1px solid #bbf7d0", padding: "3px 8px", borderRadius: "9999px" }}>
+                    🌐 Live Web
+                  </span>
+                )}
                 {j.deadline && (
                   <span className="card-deadline">
                     ⏳ {Math.max(1, Math.ceil((new Date(j.deadline).getTime() - Date.now()) / (1000 * 60 * 60 * 24)))}d left

@@ -13,6 +13,9 @@ def init_db() -> None:
             if "deadline" not in columns:
                 with engine.begin() as conn:
                     conn.execute(text("ALTER TABLE jobs ADD COLUMN deadline DATETIME NULL"))
+            if "apply_url" not in columns:
+                with engine.begin() as conn:
+                    conn.execute(text("ALTER TABLE jobs ADD COLUMN apply_url VARCHAR(500) NULL"))
     except Exception as e:
         print(f"Migration note: {e}")
 

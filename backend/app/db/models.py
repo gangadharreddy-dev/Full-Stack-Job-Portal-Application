@@ -31,6 +31,7 @@ class Job(Base):
     description: Mapped[str] = mapped_column(Text, nullable=False)
     job_type: Mapped[str] = mapped_column(String(50), default="Full-time", nullable=False)
     deadline: Mapped[datetime | None] = mapped_column(DateTime, nullable=True)
+    apply_url: Mapped[str | None] = mapped_column(String(500), nullable=True)
 
     created_at: Mapped[datetime] = mapped_column(DateTime, default=datetime.utcnow, nullable=False)
 

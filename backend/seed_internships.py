@@ -246,12 +246,15 @@ def seed_jobs() -> None:
                     updated += 1
                 continue
 
-            job_data = {**item, "deadline": item_deadline}
-            db.add(Job(**job_data))
-            added += 1
+        # Stream live real-time internships & jobs from LinkedIn & Indeed
+        try:
+            from app.services.live_sync import sync_live_jobs
+            print("Streaming real-time live jobs from LinkedIn & Indeed...")
+            sync_res = sync_live_jobs(db, limit_per_query=6)
+            print(f"Live sync result: {sync_res}")
+        except Exception as sync_err:
+            print(f"Live sync notice: {sync_err}")
 
-        db.commit()
-        print(f"Added {added} jobs. Updated {updated} existing jobs with active deadlines.")
     finally:
         db.close()
 
