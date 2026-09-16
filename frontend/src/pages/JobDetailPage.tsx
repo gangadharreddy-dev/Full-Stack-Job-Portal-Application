@@ -43,7 +43,10 @@ export default function JobDetailPage({
 
   function handleFileChange(file: File | null) {
     setResumeError(null);
-    if (!file) { setResume(null); return; }
+    if (!file) {
+      setResume(null);
+      return;
+    }
     const ext = file.name.split(".").pop()?.toLowerCase();
     if (!["pdf", "doc", "docx"].includes(ext ?? "")) {
       setResumeError("Only PDF, DOC, or DOCX files are allowed.");
@@ -86,23 +89,67 @@ export default function JobDetailPage({
 
       {job && (
         <div className="detail-card">
+
+          {/* Job Header */}
           <div>
             <h2>{job.title}</h2>
             <div className="sub" style={{ marginTop: "6px" }}>
-              <strong>{job.company}</strong> • {job.location} • <span className="card-type">{job.job_type}</span>
+              <strong>{job.company}</strong> • {job.location} •{" "}
+              <span className="card-type">{job.job_type}</span>
             </div>
+
             {job.deadline && (
               <div style={{ marginTop: "12px" }}>
                 <span className="card-deadline">
-                  ⏳ Application Deadline: {new Date(job.deadline).toLocaleDateString(undefined, { month: "short", day: "numeric", year: "numeric" })} ({Math.max(1, Math.ceil((new Date(job.deadline).getTime() - Date.now()) / (1000 * 60 * 60 * 24)))} days remaining)
+                  ⏳ Application Deadline:{" "}
+                  {new Date(job.deadline).toLocaleDateString(undefined, {
+                    month: "short",
+                    day: "numeric",
+                    year: "numeric",
+                  })}{" "}
+                  (
+                  {Math.max(
+                    1,
+                    Math.ceil(
+                      (new Date(job.deadline).getTime() - Date.now()) /
+                        (1000 * 60 * 60 * 24)
+                    )
+                  )}{" "}
+                  days remaining)
                 </span>
               </div>
             )}
+          </div>
+
+          {/* External Apply Button (Live listings) */}
           {job.apply_url && (
-            <div style={{ background: "var(--blue-tint)", border: "1px solid var(--blue-tint-border)", borderRadius: "12px", padding: "16px", display: "flex", alignItems: "center", justifyContent: "space-between", flexWrap: "wrap", gap: "12px" }}>
+            <div
+              style={{
+                background: "var(--blue-tint)",
+                border: "1px solid var(--blue-tint-border)",
+                borderRadius: "12px",
+                padding: "16px",
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "space-between",
+                flexWrap: "wrap",
+                gap: "12px",
+              }}
+            >
               <div>
-                <strong style={{ color: "var(--royal-blue)", display: "block", fontSize: "15px" }}>🌐 Live External Opening (LinkedIn / Indeed)</strong>
-                <span style={{ fontSize: "14px", color: "var(--text-secondary)" }}>Direct official listing from the web. You can apply directly on the company site.</span>
+                <strong
+                  style={{
+                    color: "var(--royal-blue)",
+                    display: "block",
+                    fontSize: "15px",
+                  }}
+                >
+                  🌐 Live External Opening (LinkedIn / Indeed)
+                </strong>
+                <span style={{ fontSize: "14px", color: "var(--text-secondary)" }}>
+                  Direct official listing from the web. You can apply directly on the
+                  company site.
+                </span>
               </div>
               <a
                 href={job.apply_url}
@@ -117,7 +164,7 @@ export default function JobDetailPage({
                   display: "inline-flex",
                   alignItems: "center",
                   gap: "6px",
-                  boxShadow: "0 2px 8px rgba(30,64,175,0.25)"
+                  boxShadow: "0 2px 8px rgba(30,64,175,0.25)",
                 }}
               >
                 Apply on Official Site ↗
@@ -125,13 +172,25 @@ export default function JobDetailPage({
             </div>
           )}
 
+          {/* Description */}
           <div style={{ borderTop: "1px solid #f4f2eb", paddingTop: "16px" }}>
-            <h3 style={{ margin: "0 0 8px", fontSize: "16px", fontWeight: 700 }}>About this Opportunity</h3>
+            <h3 style={{ margin: "0 0 8px", fontSize: "16px", fontWeight: 700 }}>
+              About this Opportunity
+            </h3>
             <p className="desc">{job.description}</p>
           </div>
 
-          <form onSubmit={handleApply} className="form" style={{ borderTop: "1px solid #f4f2eb", paddingTop: "20px" }}>
-            <h3 style={{ margin: "0 0 4px", fontSize: "16px", fontWeight: 700 }}>Apply for this Role</h3>
+          {/* Apply Form */}
+          <form
+            onSubmit={handleApply}
+            className="form"
+            style={{ borderTop: "1px solid #f4f2eb", paddingTop: "20px" }}
+          >
+            <h3 style={{ margin: "0 0 4px", fontSize: "16px", fontWeight: 700 }}>
+              Apply for this Role
+            </h3>
+
+            {/* Cover Letter */}
             <label>
               Why are you a good fit for this role? (Cover Note)
               <textarea
@@ -145,9 +204,21 @@ export default function JobDetailPage({
 
             {/* Resume Upload */}
             <div>
-              <div style={{ fontSize: "13px", fontWeight: 700, color: "var(--text-primary)", marginBottom: "8px" }}>
-                📄 Upload Resume / CV <span style={{ fontWeight: 400, color: "var(--text-muted)" }}>(Optional · PDF, DOC, DOCX · Max 5 MB)</span>
+              <div
+                style={{
+                  fontSize: "13px",
+                  fontWeight: 700,
+                  color: "var(--text-primary)",
+                  marginBottom: "8px",
+                }}
+              >
+                📄 Upload Resume / CV{" "}
+                <span style={{ fontWeight: 400, color: "var(--text-muted)" }}>
+                  (Optional · PDF, DOC, DOCX · Max 5 MB)
+                </span>
               </div>
+
+              {/* Hidden native file input */}
               <input
                 ref={fileInputRef}
                 type="file"
@@ -155,6 +226,8 @@ export default function JobDetailPage({
                 style={{ display: "none" }}
                 onChange={(e) => handleFileChange(e.target.files?.[0] ?? null)}
               />
+
+              {/* Clickable upload area */}
               <div
                 onClick={() => fileInputRef.current?.click()}
                 style={{
@@ -173,38 +246,74 @@ export default function JobDetailPage({
                 <div>
                   {resume ? (
                     <>
-                      <div style={{ fontSize: "13px", fontWeight: 700, color: "var(--royal-blue)" }}>{resume.name}</div>
+                      <div
+                        style={{
+                          fontSize: "13px",
+                          fontWeight: 700,
+                          color: "var(--royal-blue)",
+                        }}
+                      >
+                        {resume.name}
+                      </div>
                       <div style={{ fontSize: "12px", color: "var(--text-secondary)" }}>
                         {(resume.size / 1024).toFixed(1)} KB · Click to change
                       </div>
                     </>
                   ) : (
                     <>
-                      <div style={{ fontSize: "13px", fontWeight: 600, color: "var(--text-primary)" }}>Click to upload your Resume / CV</div>
-                      <div style={{ fontSize: "12px", color: "var(--text-muted)" }}>PDF, DOC, or DOCX · Max 5 MB</div>
+                      <div
+                        style={{
+                          fontSize: "13px",
+                          fontWeight: 600,
+                          color: "var(--text-primary)",
+                        }}
+                      >
+                        Click to upload your Resume / CV
+                      </div>
+                      <div style={{ fontSize: "12px", color: "var(--text-muted)" }}>
+                        PDF, DOC, or DOCX · Max 5 MB
+                      </div>
                     </>
                   )}
                 </div>
                 {resume && (
                   <button
                     type="button"
-                    onClick={(e) => { e.stopPropagation(); setResume(null); }}
-                    style={{ marginLeft: "auto", background: "none", border: "none", cursor: "pointer", fontSize: "18px", color: "#ef4444" }}
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      setResume(null);
+                    }}
+                    style={{
+                      marginLeft: "auto",
+                      background: "none",
+                      border: "none",
+                      cursor: "pointer",
+                      fontSize: "18px",
+                      color: "#ef4444",
+                    }}
                     title="Remove file"
-                  >✕</button>
+                  >
+                    ✕
+                  </button>
                 )}
               </div>
-              {resumeError && <div className="error" style={{ marginTop: "8px" }}>{resumeError}</div>}
+
+              {resumeError && (
+                <div className="error" style={{ marginTop: "8px" }}>
+                  {resumeError}
+                </div>
+              )}
             </div>
 
-            <button disabled={applying} style={{ alignSelf: "flex-start", minWidth: "160px" }}>
+            <button
+              disabled={applying}
+              style={{ alignSelf: "flex-start", minWidth: "160px" }}
+            >
               {applying ? "Submitting Application..." : "Submit Application"}
             </button>
           </form>
-
         </div>
       )}
     </div>
   );
 }
-
